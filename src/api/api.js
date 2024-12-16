@@ -1,9 +1,36 @@
-const baseURL = 'https://kumi-kemerovo.ru/table-inner/api/'
-const debug = true
+const baseURL = 'https://kumi-kemerovo.ru/table-inner/api/api.php'
+const DEV = import.meta.env.DEV
+
+function apiFetch({event='all', method='GET', body = {}, getParams = {}}) {
+    const url = new URL(baseURL)
+    url.search = new URLSearchParams({'s__type_event': event, ...getParams}).toString();
+    const params = {
+        method,
+        credentials: "same-origin",
+        headers: {'Content-Type': 'application/json;charset=utf-8'},
+    }
+    if (method === 'POST') params.body = JSON.stringify(body);
+    return fetch(url, params);
+}
 
 export default {
-    async getList(filters) {
-        if (debug) return [
+    async createRow() {
+        if (DEV) return {id: 2, name: "Попов",date: new Date().toISOString().substring(0,10),object: "",sum: "",kbk: "",dateDeposit: "",nameAccountant: "",type: "",dateConclusion: ""}
+        
+        const response = await apiFetch({event:'create', method: 'POST',});
+        const data = await response.json();  
+        return data
+    },
+
+    async updateItem(id, data) {
+        if (DEV) return true
+        const response = await apiFetch({event: 'update', method: 'POST', body:{id, data}})
+        return response?.ok ?? false
+    },
+
+    async getTableData(filters, isMounted) {
+        if (DEV) return {
+            items: [
                 {
                     id: 0,
                     name: "Попов",
@@ -28,41 +55,7 @@ export default {
                     type: "Договор",
                     dateConclusion: "2023-11-12"
                 }
-        ]
-
-        const url = new URL(baseURL + 'list/')
-        url.search = new URLSearchParams(filters).toString()
-        const response = await fetch(url, {
-            credentials: "same-origin",
-        });
-        const data = await response.json()
-        return data
-    },
-
-    async createRow() {
-        if (debug) return {id: 2, name: "Попов",date: new Date().toISOString().substring(0,10),object: "",sum: "",kbk: "",dateDeposit: "",nameAccountant: "",type: "",dateConclusion: ""}
-        
-        const response = await fetch(baseURL + 'create/', {
-            method: 'POST',
-            credentials: "same-origin",
-        });
-        const data = await response.json();  
-        return data
-    },
-
-    async updateItem(id, data) {
-        if (debug) return true
-        const response = await fetch(baseURL + 'update/', {
-            method: 'POST',
-            credentials: "same-origin",
-            headers: {'Content-Type': 'application/json;charset=utf-8'},
-            body: JSON.stringify({id, data})
-        })
-        return response?.ok ?? false
-    },
-
-    async getTableData() {
-        if (debug) return {
+            ],
             columns: [
                 {
                 name: 'name',
@@ -121,18 +114,15 @@ export default {
                 type: "history"
                 }
             ],
-            years: [2024, 2023, 2022]
-        
         }
-        const response = await fetch(baseURL + 'table-data.php/', {
-             credentials: "same-origin"
-        });
+
+        const response = await apiFetch({event: isMounted ? 'all' : 'get_fields', body:filters});
         const data = await response.json()
         return data
     },
 
     async getHistory(id) {
-        if (debug) return [
+        if (DEV) return [
             {
                 name: "Попов",
                 date: "2024-02-24",
@@ -144,9 +134,8 @@ export default {
                 text: "Изменил КБК"
             }
         ]
-        const response = await fetch(baseURL + `history/?id=${id}`, {
-            credentials: "same-origin"
-       });
+
+        const response = await apiFetch({event: 'get_history', getParams:{id}});
         const data = await response.json()
         return data
     }

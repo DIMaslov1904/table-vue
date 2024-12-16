@@ -8,24 +8,29 @@ import TableItemLoading from '@/components/Table/TableItemLoading.vue'
 import API from '@/api/api'
 
 import { sortTable } from '@/utils/sorting'
+import range from '@/utils/range'
 import { onMounted, ref, watch } from 'vue';
 
-const nowYear = new Date().getFullYear();
+const newDate = new Date();
+
+const nowYear = newDate.getFullYear();
 
 const sorting = ref('')
 const sortingName = ref('Сортировка')
 const loading = ref(true)
 const selectYear = ref(nowYear)
-const selectMonth = ref(new Date().getMonth())
+const selectMonth = ref(newDate.getMonth())
 const columns = ref([])
 const items = ref([])
-const yearOptions = ref([nowYear]);
-const monthOptions = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','октябрь','Ноябрь','Декабрь']
+const yearOptions = [...range(2000, nowYear)];
+const monthOptions = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'октябрь', 'Ноябрь', 'Декабрь']
 
-async function getList() {
+async function getList(isMounted=false) {
   sorting.value = ''
   loading.value = true;
-  items.value = await API.getList({year: selectYear.value, month: selectMonth.value})
+  const data = await API.getTableData({ year: selectYear.value, month: selectMonth.value}, isMounted);
+  columns.value = data.columns;
+  items.value = data.items;
   loading.value = false;
 }
 
@@ -34,52 +39,48 @@ async function Add() {
   items.value.unshift(newItem)
 }
 
-watch([selectYear,selectMonth], getList)
+watch([selectYear, selectMonth], getList)
 watch(sorting, () => {
   sortTable(items.value, sorting.value, columns.value)
   if (sorting.value) {
-    sortingName.value = columns.value.find((item)=> item.name === sorting.value.replace('_down', '').replace('_up', ''))?.title;
+    sortingName.value = columns.value.find((item) => item.name === sorting.value.replace('_down', '').replace('_up', ''))?.title;
   } else {
     sortingName.value = 'Сортировка';
   }
 })
 
 async function Mounted() {
-  loading.value = true;
-  const data = await API.getTableData();
-  columns.value = data.columns;
-  yearOptions.value = data.years;
-  await getList()
+  getList(true)
 }
 
 onMounted(Mounted)
 </script>
 
 <template>
-<div class="app">
-  <div class="actions">
-    <div class="filters">
-      <select class="select" v-model="selectYear">
-        <option v-for="year in yearOptions" :value="year">{{year}}</option>
-      </select>
+  <div class="app">
+    <div class="actions">
+      <div class="filters">
+        <select class="select" v-model="selectYear">
+          <option v-for="year in yearOptions" :value="year">{{ year }}</option>
+        </select>
 
-      <select class="select" v-model="selectMonth">
-        <option v-for="(month, i) in monthOptions" :value="i">{{ month }}</option>
-      </select>
+        <select class="select" v-model="selectMonth">
+          <option v-for="(month, i) in monthOptions" :value="i">{{ month }}</option>
+        </select>
+      </div>
+
+      <button class="btn" @click="Add">Добавить</button>
     </div>
 
-    <button class="btn" @click="Add">Добавить</button>
-  </div>
-
-  <TableWrap>
+    <TableWrap>
       <TableHead :columns="columns" v-model="sorting" :sortingName="sortingName" />
       <TableBody>
         <TableItemEmpty v-if="!items.length && !loading" />
         <TableItemLoading v-else-if="loading" />
         <TableItem v-else v-for="item in items" :key="item.id" :columns="columns" :item="item" :loading="loading" />
       </TableBody>
-  </TableWrap>
-</div>
+    </TableWrap>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -103,6 +104,7 @@ onMounted(Mounted)
     flex-wrap: wrap;
   }
 }
+
 .btn {
   padding: 10px 20px;
   border: none;
@@ -117,10 +119,12 @@ onMounted(Mounted)
     }
   }
 }
+
 .filters {
   display: flex;
   gap: 12px;
 }
+
 .select {
   min-height: 35px;
   padding: 5px 10px;

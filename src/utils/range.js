@@ -1,0 +1,1 @@
+export default function* range(s, e) { while (s <= e) yield s++ }
