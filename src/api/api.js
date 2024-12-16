@@ -1,7 +1,7 @@
 const baseURL = 'https://kumi-kemerovo.ru/table-inner/api/api.php'
 const DEV = import.meta.env.DEV
 
-function apiFetch({event='all', method='GET', body = {}, getParams = {}}) {
+async function apiFetch({event='all', method='GET', body = {}, getParams = {}}, getData = true) {
     const url = new URL(baseURL)
     url.search = new URLSearchParams({'s__type_event': event, ...getParams}).toString();
     const params = {
@@ -10,21 +10,24 @@ function apiFetch({event='all', method='GET', body = {}, getParams = {}}) {
         headers: {'Content-Type': 'application/json;charset=utf-8'},
     }
     if (method === 'POST') params.body = JSON.stringify(body);
-    return fetch(url, params);
+    const res = await fetch(url, params)
+    if (!getData) return res
+    const data = await res.json()
+    return data;
 }
 
 export default {
     async createRow() {
         if (DEV) return {id: 2, name: "Попов",date: new Date().toISOString().substring(0,10),object: "",sum: "",kbk: "",dateDeposit: "",nameAccountant: "",type: "",dateConclusion: ""}
         
-        const response = await apiFetch({event:'create', method: 'POST',});
-        const data = await response.json();  
+        const data = await apiFetch({event:'create', method: 'POST',});
         return data
     },
 
     async updateItem(id, data) {
         if (DEV) return true
-        const response = await apiFetch({event: 'update', method: 'POST', body:{id, data}})
+
+        const response = await apiFetch({event: 'update', method: 'POST', body:{id, data}}, false);
         return response?.ok ?? false
     },
 
@@ -116,8 +119,7 @@ export default {
             ],
         }
 
-        const response = await apiFetch({event: isMounted ? 'all' : 'get_fields', body:filters});
-        const data = await response.json()
+        const data = await apiFetch({event: isMounted ? 'all' : 'get_fields', body:filters});
         return data
     },
 
@@ -135,8 +137,7 @@ export default {
             }
         ]
 
-        const response = await apiFetch({event: 'get_history', getParams:{id}});
-        const data = await response.json()
+        const data = await apiFetch({event: 'get_history', getParams:{id}});
         return data
     }
 }
