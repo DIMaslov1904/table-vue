@@ -5,7 +5,8 @@ import ItemDate from '@/components/Items/ItemDate.vue';
 import ItemSelect from '@/components/Items/ItemSelect.vue';
 import ItemHistory from '@/components/Items/ItemHistory.vue';
 import ItemMoney from '@/components/Items/ItemMoney.vue';
-import API from '@/api/api';
+
+const API = TABLE_VUE_API()
 
 const props = defineProps({
   columns: {

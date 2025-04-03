@@ -1,7 +1,7 @@
 {
   "createRow": {
     "id": 2,
-    "name": "Попов",
+    "name": "",
     "date": "2024-01-01",
     "object": "",
     "sum": "",
@@ -71,7 +71,6 @@
         "type": "history"
       }
     ],
-
     "items": [
       {
         "id": 0,

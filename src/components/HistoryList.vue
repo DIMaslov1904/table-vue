@@ -1,8 +1,8 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import API from '@/api/api'
 import { formatDate } from '@/utils/formatDate';
 
+const API = TABLE_VUE_API()
 
 const props = defineProps({
   id: {

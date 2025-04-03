@@ -5,11 +5,13 @@ import TableBody from '@/components/Table/TableBody.vue'
 import TableItem from '@/components/Table/TableItem.vue'
 import TableItemEmpty from '@/components/Table/TableItemEmpty.vue'
 import TableItemLoading from '@/components/Table/TableItemLoading.vue'
-import API from '@/api/api'
 
 import { sortTable } from '@/utils/sorting'
 import range from '@/utils/range'
 import { onMounted, ref, watch } from 'vue';
+
+const API = TABLE_VUE_API()
+
 
 const newDate = new Date();
 
