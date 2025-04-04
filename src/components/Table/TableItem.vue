@@ -34,7 +34,7 @@ async function saveItem() {
 </script>
 
 <template>
-  <tr class="table__row">
+  <tr :class="['table__row', {'table__row_cnahged':isChange}]">
     <td v-for="elem in columns" :class="{'table__col': true, 'table__col_no-padding': elem.type === 'history', 'table__col_no-active': loading}" :data-title="elem.title">
       <ItemHistory v-if="elem.type === 'history'" :id="item.id" />
       <ItemDate v-else-if="elem.type === 'date'" v-model="item[elem.name]" @change="val => updateItem(elem.name, val)"/>
@@ -50,6 +50,11 @@ async function saveItem() {
 
 <style scoped lang="scss">
 .table {
+  &__row {
+    &_cnahged  td{
+      background-color: #ffb579;
+    }
+  }
   @media (min-width: 769px) {
     &__row:hover .table__col {
       background-color: #f2f2f2;

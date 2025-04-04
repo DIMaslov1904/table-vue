@@ -8,6 +8,7 @@
 
 <style scoped lang="scss">
 .table {
+
   width: 1110px;
   border: 1px solid rgb(var(--border-color));
   border-collapse: collapse;
