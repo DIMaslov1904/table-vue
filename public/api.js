@@ -1,6 +1,6 @@
 const TABLE_VUE_API = () => {
   const baseURL = "https://kumi-kemerovo.ru/table-inner/api/api.php";
-  const DEV = true;
+  const DEV = false;
 
   async function apiFetch({ event = "all", method = "GET", body = {}, getParams = {} }, getData = true) {
     const url = new URL(baseURL);
@@ -29,7 +29,7 @@ const TABLE_VUE_API = () => {
         return res;
       }
 
-      const data = await apiFetch({ event: "create", method: "POST" });
+      const data = await apiFetch({ event: "add", method: "POST" });
       return data;
     },
 
@@ -37,7 +37,7 @@ const TABLE_VUE_API = () => {
       if (DEV) return true;
 
       const response = await apiFetch({ event: "update", method: "POST", body: { id, data } }, false);
-      return response?.ok ?? false;
+      return response?.update ?? false;
     },
 
     async getTableData(filters, isMounted) {
@@ -46,15 +46,34 @@ const TABLE_VUE_API = () => {
         return isMounted ? res.fields : { items: res.fields.items };
       }
 
-      const data = await apiFetch({ event: isMounted ? "all" : "get_fields", body: filters });
-      return data;
+      const data = await apiFetch({ event: isMounted ? "get" : "get", body: filters });
+
+      const res = {
+        columns: [...data.items.a__fields,  {
+          "name": "history",
+          "title": "история измен.",
+          "type": "history"
+        }],
+        items: []
+      }
+
+      for (key in data.items.a__items) {
+        res.items.push(data.items.a__items[key])
+      }
+
+      return res;
     },
 
     async getHistory(id) {
       if (DEV) return (await apiFetchDev()).history;
 
-      const data = await apiFetch({ event: "get_history", getParams: { id } });
-      return data;
+      const data = await apiFetch({ event: "history", getParams: { id } });
+      const res = [];
+      for (key in data.history.a__items) {
+        res.push(data.history.a__items[key])
+      }
+      
+      return res;
     },
   };
 };
