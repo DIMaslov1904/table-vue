@@ -22,7 +22,7 @@ export function sortTable(arr, field, columns) {
         } else if (type === 'date') {
             return sorting(new Date(bValue), new Date(aValue))
         } else {
-            return isDown ? bValue.localeCompare(aValue) : aValue.localeCompare(bValue)
+            return isDown ? ('' + bValue).localeCompare(aValue) : ('' + aValue).localeCompare(bValue)
         }
     })  
 }
