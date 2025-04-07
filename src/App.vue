@@ -25,12 +25,12 @@ const selectMonth = ref(newDate.getMonth())
 const columns = ref([])
 const items = ref([])
 const yearOptions = [...range(2000, nowYear)];
-const monthOptions = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'октябрь', 'Ноябрь', 'Декабрь']
+const monthOptions = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']
 
 async function getList(isMounted=false) {
   sorting.value = ''
   loading.value = true;
-  const data = await API.getTableData({ year: selectYear.value, month: selectMonth.value}, isMounted);
+  const data = await API.getTableData({ year: selectYear.value, month: selectMonth.value + 1}, isMounted);
   columns.value = data.columns;
   items.value = data.items;
   loading.value = false;
