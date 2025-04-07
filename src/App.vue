@@ -61,7 +61,7 @@ onMounted(Mounted)
 <template>
   <div class="app">
     <div class="actions">
-      <div class="filters">
+      <div class="actions__group">
         <select class="select" v-model="selectYear">
           <option v-for="year in yearOptions" :value="year">{{ year }}</option>
         </select>
@@ -71,7 +71,10 @@ onMounted(Mounted)
         </select>
       </div>
 
-      <button class="btn" @click="Add">Добавить</button>
+      <div class="actions__group">
+        <button class="btn" @click="getList">Обновить</button>
+        <button class="btn" @click="Add">Добавить</button>
+      </div>
     </div>
 
     <TableWrap>
@@ -107,6 +110,12 @@ onMounted(Mounted)
   }
 }
 
+.actions__group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
 .btn {
   padding: 10px 20px;
   border: none;
@@ -120,11 +129,6 @@ onMounted(Mounted)
       background-color: rgb(var(--active-color));
     }
   }
-}
-
-.filters {
-  display: flex;
-  gap: 12px;
 }
 
 .select {
