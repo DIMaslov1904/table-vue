@@ -53,7 +53,7 @@ const TABLE_VUE_API = () => {
         return isMounted ? res.fields : { items: res.fields.items };
       }
 
-      const data = await apiFetch({ event: isMounted ? "get" : "get", body: filters });
+      const data = await apiFetch({ event: isMounted ? "get" : "get", getParams: {...filters, 'getColumns': isMounted === true } });
 
       const res = {
         columns: [...data.items.a__fields,  {
