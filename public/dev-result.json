@@ -18,7 +18,7 @@
         "name": "name",
         "title": "ФИО инициатора",
         "type": "select",
-        "options": ["Попов", "Иванов", "Петров", "Сидоров"]
+        "options": [{"id": 1, "label":"Попов"}, {"id": 2, "label":"Иванов"}, {"id": 3, "label":"Петров"}, {"id": 4, "label":"Сидоров"}]
       },
       {
         "name": "date",
@@ -40,7 +40,7 @@
         "name": "kbk",
         "title": "КБК",
         "type": "select",
-        "options": ["453", "454", "455", "456"]
+        "options": [{"id": 1, "label":"453"}, {"id": 2, "label":"454"}, {"id": 3, "label":"455"}, {"id": 4, "label":"456"}]
       },
       {
         "name": "dateDeposit",
@@ -51,14 +51,34 @@
         "name": "nameAccountant",
         "title": "ФИО чл.к.сл.",
         "type": "select",
-        "options": ["Чериаковцева", "Иванов", "Петров", "Сидоров"]
+        "options": [{"id": 1, "label":"Чериаковцева"}, {"id": 2, "label":"Иванов"}, {"id": 3, "label":"Петров"}, {"id": 4, "label":"Сидоров"}]
       },
       {
         "name": "type",
         "title": "Тип",
         "type": "select",
-        "options": ["Договор", "Контракт", "аукцион"],
+        "options": [{"id": 1, "label":"Договор"}, {"id": 2, "label":"Контракт"}, {"id": 3, "label":"аукцион"}],
         "width": "100"
+      },
+      {
+        "name": "dateConclusion",
+        "title": "дата заключ.",
+        "type": "date"
+      },
+      {
+        "name": "dateConclusion",
+        "title": "дата заключ.",
+        "type": "date"
+      },
+      {
+        "name": "dateConclusion",
+        "title": "дата заключ.",
+        "type": "date"
+      },
+      {
+        "name": "dateConclusion",
+        "title": "дата заключ.",
+        "type": "date"
       },
       {
         "name": "dateConclusion",
@@ -74,26 +94,26 @@
     "items": [
       {
         "id": 0,
-        "name": "Попов",
+        "name": 1,
         "date": "2024-11-05",
         "object": "заправки",
         "sum": "10000000",
-        "kbk": "453",
+        "kbk": 1,
         "dateDeposit": "2024-11-06",
-        "nameAccountant": "Чериаковцева",
-        "type": "Договор",
+        "nameAccountant": 1,
+        "type": 1,
         "dateConclusion": "2024-11-07"
       },
       {
         "id": 1,
-        "name": "Попов",
+        "name": 2,
         "date": "2024-11-04",
         "object": "заправки",
         "sum": "30000",
-        "kbk": "453",
+        "kbk": 1,
         "dateDeposit": "2024-11-07",
-        "nameAccountant": "Петров",
-        "type": "Договор",
+        "nameAccountant": 3,
+        "type": 1,
         "dateConclusion": "2023-11-12"
       }
     ]

@@ -13,7 +13,7 @@ const model = defineModel()
 
 <template>
   <select class="input" v-model="model">
-    <option v-for="item in options" :key="item" :value="item">{{ item }}</option>
+    <option v-for="item in options" :key="item.id" :value="item.id">{{ item.label }}</option>
   </select>
 </template>
 

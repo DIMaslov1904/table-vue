@@ -1,6 +1,6 @@
 const TABLE_VUE_API = () => {
   const baseURL = "https://kumi-kemerovo.ru/table-inner/api/api.php";
-  const DEV = false;
+  const DEV = true;
 
   async function apiFetch({ event = "all", method = "GET", body = {}, getParams = {} }, getData = true) {
     const url = new URL(baseURL);
