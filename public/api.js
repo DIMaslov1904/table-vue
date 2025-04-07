@@ -8,12 +8,19 @@ const TABLE_VUE_API = () => {
     const params = {
       method,
       credentials: "same-origin",
-      headers: { "Content-Type": "application/json;charset=utf-8" },
+      headers: { 
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
     };
-    if (method === "POST") params.body = JSON.stringify(body);
+  	if (method === "POST") params.body = JSON.stringify(body);
     const res = await fetch(url, params);
     if (!getData) return res;
-    return await res.json();
+
+    try {
+      return await res.json();
+    } catch (e) {
+      return res;
+    }
   }
 
   async function apiFetchDev() {
