@@ -53,7 +53,7 @@ const TABLE_VUE_API = () => {
         return isMounted ? res.fields : { items: res.fields.items };
       }
 
-      const data = await apiFetch({ event: isMounted ? "get" : "get", getParams: {...filters, 'getColumns': isMounted === true } });
+      const data = await apiFetch({ event: isMounted ? "get" : "get", getParams: filters });
 
       const res = {
         columns: [...data.items.a__fields,  {
@@ -75,12 +75,8 @@ const TABLE_VUE_API = () => {
       if (DEV) return (await apiFetchDev()).history;
 
       const data = await apiFetch({ event: "history", getParams: { id } });
-      const res = [];
-      for (key in data.history.a__items) {
-        res.push(data.history.a__items[key])
-      }
       
-      return res;
+      return data.history;
     },
   };
 };
