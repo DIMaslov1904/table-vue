@@ -21,7 +21,7 @@ onMounted(getList)
 
 <template>
     <ul class="list">
-        <li>История строки {{ id }}</li>
+        <li>История строки <a :href="`/bitrix/admin/iblock_element_edit.php?IBLOCK_ID=18&type=documents&lang=ru&ID=${id}&find_section_section=0&WF=Y`" target="_blank" title="Перейти к данному элементу в административной части сайта">{{ id }}</a></li>
         <li v-for="item in list" class="item">
           <span class="strong">{{ item.name }} [{{ formatDate(item.date) }}]</span> - {{ item.text }}
         </li>
