@@ -37,7 +37,7 @@ const TABLE_VUE_API = () => {
       }
 
       const data = await apiFetch({ event: "add", method: "POST", getParams: date });
-      return data;
+      return data.createRow;
     },
 
     async updateItem(id, data) {
