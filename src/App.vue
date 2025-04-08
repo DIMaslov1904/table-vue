@@ -37,7 +37,7 @@ async function getList(isMounted=false) {
 }
 
 async function Add() {
-  const newItem = await API.createRow();
+  const newItem = await API.createRow({ year: selectYear.value, month: selectMonth.value + 1, day: newDate.getDate()});
   items.value.unshift(newItem)
 }
 
