@@ -29,14 +29,13 @@ var TABLE_VUE_API = () => {
   }
 
   return {
-    async getUserGroup() {
+        async getUserGroup() {
       if (DEV) {
-        var res = (await apiFetchDev()).getUserGroup;
-        return res;
+        return (await apiFetchDev()).getUserGroup;
       }
 
       var data = await fetch("/api/getUserGroup.php");
-      return data.createRow;
+      return data.json();
     },
 
     async createRow(date) {

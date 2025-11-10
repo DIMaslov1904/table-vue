@@ -40,7 +40,9 @@ function getDisabled(elem) {
 
   if (elem.additional_props.b__is_protected) return true
 
-  if (elem.additional_props.s__field_user_groups.length === 0 || props.userGroups.length === 0) return false;
+  if (elem.additional_props.s__field_user_groups.length === 0) return false;
+
+  if (!props.userGroups || props.userGroups.length === 0) return true;
 
   if ((props.userGroups.filter(element => elem.additional_props.s__field_user_groups.includes(element))).length !== 0)
     return false;
