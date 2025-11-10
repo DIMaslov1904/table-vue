@@ -2,6 +2,12 @@
 import { ref, watch } from 'vue';
 import InputText from '@/components/InputText.vue';
 
+const props = defineProps({
+    disabled: {
+        type: Boolean,
+        default: false
+    }
+});
 const item = defineModel()
 const emit = defineEmits(['change']);
 const isInput = ref(false)
@@ -11,7 +17,7 @@ watch(item, (val) => emit('change', val))
 
 <template>
     <InputText v-if="isInput" v-model="item" @blur="isInput=false" />
-    <span v-else @click="isInput=true" class="table__text">{{ item }}</span>
+    <span v-else @click="!disabled && (isInput=true)" class="table__text">{{ item }}</span>
 </template>
 
 <style scoped>

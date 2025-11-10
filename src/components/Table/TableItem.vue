@@ -19,6 +19,9 @@ const props = defineProps({
   },
   loading: {
     type: Boolean,
+  },
+  userGroups: {
+    type: [Number]
   }
 })
 
@@ -31,16 +34,30 @@ async function saveItem() {
   const res = await API.updateItem(props.item.id, props.item)
   isChange.value = false
 }
+
+function getDisabled(elem) {
+  if (!elem.additional_props) return false;
+
+  if (elem.additional_props.b__is_protected) return true
+
+  if (elem.additional_props.s__field_user_groups.length === 0 || props.userGroups.length === 0) return false;
+
+  if ((props.userGroups.filter(element => elem.additional_props.s__field_user_groups.includes(element))).length !== 0)
+    return false;
+
+  return true
+}
+
 </script>
 
 <template>
   <tr :class="['table__row', {'table__row_cnahged':isChange}]">
-    <td v-for="elem in columns" :class="{'table__col': true, 'table__col_no-padding': elem.type === 'history', 'table__col_no-active': loading}" :data-title="elem.title">
+    <td v-for="elem in columns" :class="{'table__col': true, 'table__col_no-padding': elem.type === 'history', 'table__col_no-active': loading, 'table__col_disabled': getDisabled(elem)}" :data-title="elem.title">
       <ItemHistory v-if="elem.type === 'history'" :id="item.id" />
-      <ItemDate v-else-if="elem.type === 'date'" v-model="item[elem.name]" @change="val => updateItem(elem.name, val)"/>
-      <ItemSelect v-else-if="elem.type === 'select'" v-model="item[elem.name]" :options="elem.options" @change="val => updateItem(elem.name, val)"/>
-      <ItemMoney v-else-if="elem.type === 'money'" v-model="item[elem.name]" @change="val => updateItem(elem.name, val)"/>
-      <ItemText v-else v-model="item[elem.name]" @change="val => updateItem(elem.name, val)"/>
+      <ItemDate v-else-if="elem.type === 'date'" v-model="item[elem.name]" @change="val => updateItem(elem.name, val)" :disabled="getDisabled(elem)"/>
+      <ItemSelect v-else-if="elem.type === 'select'" v-model="item[elem.name]" :options="elem.options" @change="val => updateItem(elem.name, val)" :disabled="getDisabled(elem)"/>
+      <ItemMoney v-else-if="elem.type === 'money'" v-model="item[elem.name]" @change="val => updateItem(elem.name, val)" :disabled="getDisabled(elem)"/>
+      <ItemText v-else v-model="item[elem.name]" @change="val => updateItem(elem.name, val)" :disabled="getDisabled(elem)"/>
     </td>
     <td v-if="isChange" class="table__save-col">
       <button class="table__save-btn" @click="saveItem()">Сохранить</button>
@@ -87,7 +104,7 @@ async function saveItem() {
       filter: brightness(.9);
     }
   }
-  
+
   &__col {
     padding: 5px 10px;
     @media (min-width: 769px) {
@@ -96,6 +113,10 @@ async function saveItem() {
       &_no-padding {
         padding: 0;
       }
+    }
+
+    &_disabled {
+      background-color: #f2f2f2;
     }
 
     &_no-active {

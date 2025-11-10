@@ -1,19 +1,19 @@
-const TABLE_VUE_API = () => {
-  const baseURL = "https://kumi-kemerovo.ru/table-inner/api/api.php";
-  const DEV = false;
+var TABLE_VUE_API = () => {
+  var baseURL = "/table-inner/api/api.php";
+  var DEV = true;
 
   async function apiFetch({ event = "all", method = "GET", body = {}, getParams = {} }, getData = true) {
-    const url = new URL(baseURL);
-    url.search = new URLSearchParams({ s__type_event: event, ...getParams }).toString();
-    const params = {
+    var searchParams = new URLSearchParams({ s__type_event: event, ...getParams }).toString();
+    var url = baseURL + "?" + searchParams;
+    var params = {
       method,
       credentials: "same-origin",
-      headers: { 
+      headers: {
         "Content-Type": "application/x-www-form-urlencoded"
       },
     };
   	if (method === "POST") params.body = JSON.stringify(body);
-    const res = await fetch(url, params);
+    var res = await fetch(url, params);
     if (!getData) return res;
 
     try {
@@ -24,36 +24,46 @@ const TABLE_VUE_API = () => {
   }
 
   async function apiFetchDev() {
-    const res = await fetch("dev-result.json");
+    var res = await fetch("dev-result.json");
     return await res.json();
   }
 
   return {
+    async getUserGroup() {
+      if (DEV) {
+        var res = (await apiFetchDev()).getUserGroup;
+        return res;
+      }
+
+      var data = await fetch("/api/getUserGroup.php");
+      return data.createRow;
+    },
+
     async createRow(date) {
       if (DEV) {
-        const res = (await apiFetchDev()).createRow;
+        var res = (await apiFetchDev()).createRow;
         res.id = new Date().getTime();
         return res;
       }
 
-      const data = await apiFetch({ event: "add", method: "POST", getParams: date });
+      var data = await apiFetch({ event: "add", method: "POST", getParams: date });
       return data.createRow;
     },
 
     async updateItem(id, data) {
       if (DEV) return true;
 
-      const response = await apiFetch({ event: "update", method: "POST", body: { id, data } }, false);
+      var response = await apiFetch({ event: "update", method: "POST", body: { id, data } }, false);
       return response?.update ?? false;
     },
 
     async getTableData(filters, isMounted) {
       if (DEV) {
-        const res = await apiFetchDev();
+        var res = await apiFetchDev();
         return isMounted ? res.fields : { items: res.fields.items };
       }
 
-      const data = await apiFetch({ event: isMounted ? "get" : "get", getParams: filters });
+      var data = await apiFetch({ event: isMounted ? "get" : "get", getParams: filters });
 
       if (data.fields === undefined) {
         data.fields = {}
@@ -67,20 +77,13 @@ const TABLE_VUE_API = () => {
         data.fields.items = []
       }
 
-		data.fields.columns.push({
-        "name": "history",
-        "title": "история измен.",
-        "type": "history"
-      })
-
-
       return data.fields;
     },
 
     async getHistory(id) {
       if (DEV) return (await apiFetchDev()).history;
 
-      const data = await apiFetch({ event: "history", getParams: { id } });
+      var data = await apiFetch({ event: "history", getParams: { id } });
       return data.history;
     },
   };

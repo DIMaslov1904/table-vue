@@ -25,13 +25,20 @@ const selectMonth = ref(newDate.getMonth())
 const columns = ref([])
 const items = ref([])
 const yearOptions = [...range(2000, nowYear)];
-const monthOptions = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']
+const monthOptions = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+const userGroups = ref('');
 
 async function getList(isMounted=false) {
   sorting.value = ''
   loading.value = true;
   const data = await API.getTableData({ year: selectYear.value, month: selectMonth.value + 1}, isMounted);
   columns.value = data.columns;
+  columns.value.push({
+      "name": "history",
+      "title": "история измен.",
+      "type": "history"
+    })
+
   items.value = data.items;
   loading.value = false;
 }
@@ -53,6 +60,7 @@ watch(sorting, () => {
 
 async function Mounted() {
   getList(true)
+  userGroups.value = (await API.getUserGroup()).user_groups;
 }
 
 onMounted(Mounted)
@@ -82,7 +90,9 @@ onMounted(Mounted)
       <TableBody>
         <TableItemEmpty v-if="!items.length && !loading" />
         <TableItemLoading v-else-if="loading" />
-        <TableItem v-else v-for="item in items" :key="item.id" :columns="columns" :item="item" :loading="loading" />
+        <template v-else>
+          <TableItem  v-for="item in items" :key="item.id" :columns="columns" :item="item" :loading="loading" :userGroups="userGroups" />
+        </template>
       </TableBody>
     </TableWrap>
   </div>

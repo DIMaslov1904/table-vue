@@ -7,6 +7,10 @@ const props = defineProps({
     type: Object,
     required: true
   },
+  disabled: {
+    type: Boolean,
+    default: false
+  }
 })
 const emit = defineEmits(['change']);
 const item = defineModel()
@@ -16,7 +20,7 @@ watch(item, (val) => emit('change', val))
 
 <template>
   <div class="wrapper">
-    <InputSelect v-model="item" :options="options" />
+    <InputSelect v-model="item" :options="options" :disabled="disabled" />
   </div>
 </template>
 
@@ -25,5 +29,9 @@ watch(item, (val) => emit('change', val))
   width: 100%;
   min-height: 1em;
   cursor: pointer;
+
+  select:disabled {
+    color: #000;
+  }
 }
 </style>

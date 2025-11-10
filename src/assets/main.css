@@ -1,7 +1,2 @@
 @import './base.css';
 @import './vars.css';
-
-/* TODO: УБРАТЬ */
-html {
-    background-color: #f5f5f5;
-}
