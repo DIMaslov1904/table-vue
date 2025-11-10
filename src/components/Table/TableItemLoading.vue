@@ -4,7 +4,7 @@ import IconLoading from '@/components/icons/IconLoading.vue'
 
 <template>
   <tr>
-    <td colspan="30"><IconLoading class="loading"/></td>
+    <td colspan="100%"><IconLoading class="loading"/></td>
   </tr>
 </template>
 

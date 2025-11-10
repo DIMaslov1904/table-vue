@@ -1,6 +1,6 @@
 <template>
   <tr class="table__item">
-    <td class="table__row" colspan="30" >
+    <td class="table__row" colspan="100%" >
       Данные отсутствуют
     </td>
   </tr>
