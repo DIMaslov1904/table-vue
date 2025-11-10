@@ -1,6 +1,6 @@
 var TABLE_VUE_API = () => {
   var baseURL = "/table-inner/api/api.php";
-  var DEV = true;
+  var DEV = false;
 
   async function apiFetch({ event = "all", method = "GET", body = {}, getParams = {} }, getData = true) {
     var searchParams = new URLSearchParams({ s__type_event: event, ...getParams }).toString();
@@ -9,7 +9,7 @@ var TABLE_VUE_API = () => {
       method,
       credentials: "same-origin",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Content-Type": "application/json"
       },
     };
   	if (method === "POST") params.body = JSON.stringify(body);
@@ -29,7 +29,7 @@ var TABLE_VUE_API = () => {
   }
 
   return {
-        async getUserGroup() {
+    async getUserGroup() {
       if (DEV) {
         return (await apiFetchDev()).getUserGroup;
       }
