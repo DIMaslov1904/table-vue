@@ -19,7 +19,7 @@ watch(item, (val) => emit('change', val))
 </script>
 
 <template>
-  <div class="wrapper">
+  <div :class="['wrapper', {'disabled': disabled}]">
     <InputSelect v-model="item" :options="options" :disabled="disabled" />
   </div>
 </template>
@@ -32,6 +32,11 @@ watch(item, (val) => emit('change', val))
 
   select:disabled {
     color: #000;
+    opacity: 1;
+  }
+
+  &.disabled {
+    cursor: default;
   }
 }
 </style>

@@ -17,7 +17,7 @@ watch(item, (val) => emit('change', val))
 
 <template>
     <InputText v-if="isInput" v-model="item" @blur="isInput=false" />
-    <span v-else @click="!disabled && (isInput=true)" class="table__text">{{ item }}</span>
+    <span v-else @click="!disabled && (isInput=true)" :class="['table__text', {'disabled': disabled}]">{{ item }}</span>
 </template>
 
 <style scoped>
@@ -26,5 +26,9 @@ watch(item, (val) => emit('change', val))
     min-width: 100%;
     min-height: 1em;
     cursor: text;
+
+    &.disabled {
+        cursor: default;
+    }
 }
 </style>

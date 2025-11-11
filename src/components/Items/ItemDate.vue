@@ -19,7 +19,7 @@ watch(item, (val) => emit('change', val))
 </script>
 
 <template>
-    <div class="wrapper" @click="!disabled && (isInput=true)">
+    <div :class="['wrapper', {'disabled': disabled}]" @click="!disabled && (isInput=true)">
         <InputDate v-if="isInput" v-model="item" @blur="isInput=false" />
         <span v-else>{{ getDate() }}</span>
     </div>
@@ -31,5 +31,8 @@ watch(item, (val) => emit('change', val))
     width: 110px;
     min-height: 1em;
     cursor: text;
+    &.disabled {
+        cursor: default;
+    }
 }
 </style>

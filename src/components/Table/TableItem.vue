@@ -118,7 +118,7 @@ function getDisabled(elem) {
     }
 
     &_disabled {
-      background-color: #f2f2f2;
+      background-color: #e1dfdf!important;
     }
 
     &_no-active {
